@@ -72,13 +72,11 @@ public class UserController {
 
         if (email == null || email.isEmpty()) {
             newValidationException("Электронная почта не может быть пустой");
-        }
-
-        if (email.indexOf("@") == -1) {
+        } else if (!email.contains("@")) {
             newValidationException("электронная почта должна содержать символ @");
         }
 
-        if (login == null || login.isEmpty() || login.indexOf(" ") != -1) {
+        if (login == null || login.isEmpty() || login.contains(" ")) {
             newValidationException("логин не может быть пустым и содержать пробелы");
         }
 

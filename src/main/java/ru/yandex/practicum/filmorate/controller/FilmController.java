@@ -1,5 +1,6 @@
 package ru.yandex.practicum.filmorate.controller;
 
+import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.exception.NotFoundException;
@@ -17,6 +18,7 @@ import java.util.Map;
 public class FilmController {
 
     private final Map<Long, Film> films = new HashMap<>();
+    private long currentMaxId = 0;
 
     @GetMapping
     public Collection<Film> findAll() {
@@ -24,7 +26,7 @@ public class FilmController {
     }
 
     @PostMapping
-    public Film create(@RequestBody Film film) {
+    public Film create(@Valid @RequestBody Film film) {
         checkFilm(film);
         film.setId(getNextId());
         films.put(film.getId(), film);
@@ -33,7 +35,7 @@ public class FilmController {
     }
 
     @PutMapping
-    public Film update(@RequestBody Film newFilm) {
+    public Film update(@Valid @RequestBody Film newFilm) {
         // проверяем необходимые условия
         if (newFilm.getId() == null) {
             newValidationException("Id должен быть указан");
@@ -58,33 +60,13 @@ public class FilmController {
 
 
     private void checkFilm(Film film) {
-        String name = film.getName();
-        if (name == null || name.isEmpty() || name.isBlank()) {
-            newValidationException("название не может быть пустым");
-        }
-
-        String description = film.getDescription();
-        if (description != null && description.length() > 200) {
-            newValidationException("максимальная длина описания — 200 символов");
-        }
-
         LocalDate releaseDate = film.getReleaseDate();
         if (releaseDate != null && releaseDate.isBefore(LocalDate.of(1895,12,28))) {
             newValidationException("дата релиза не может быть раньше 28 декабря 1895 года");
         }
-
-        Integer duration = film.getDuration();
-        if (duration == null || duration < 0) {
-            newValidationException("продолжительность фильма должна быть положительным числом");
-        }
     }
 
     private long getNextId() {
-        long currentMaxId = films.keySet()
-                .stream()
-                .mapToLong(id -> id)
-                .max()
-                .orElse(0);
         return ++currentMaxId;
     }
 
@@ -97,5 +79,4 @@ public class FilmController {
         log.error(errMsg);
         throw new NotFoundException(errMsg);
     }
-
 }

@@ -1,12 +1,12 @@
 package ru.yandex.practicum.filmorate.controller;
 
+import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.exception.NotFoundException;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.User;
 
-import java.time.LocalDate;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -18,6 +18,8 @@ import java.util.Map;
 public class UserController {
 
     private final Map<Long, User> users = new HashMap<>();
+    private long currentMaxId = 0;
+
 
     @GetMapping
     public Collection<User> findAll() {
@@ -25,7 +27,7 @@ public class UserController {
     }
 
     @PostMapping
-    public User create(@RequestBody User user) {
+    public User create(@Valid @RequestBody User user) {
         checkUser(user);
         user.setId(getNextId());
         users.put(user.getId(), user);
@@ -34,7 +36,7 @@ public class UserController {
     }
 
     @PutMapping
-    public User update(@RequestBody User newUser) {
+    public User update(@Valid @RequestBody User newUser) {
         // проверяем необходимые условия
         if (newUser.getId() == null) {
             newValidationException("Id пользователя должен быть указан");
@@ -58,31 +60,12 @@ public class UserController {
     }
 
     private long getNextId() {
-        long currentMaxId = users.keySet()
-                .stream()
-                .mapToLong(id -> id)
-                .max()
-                .orElse(0);
         return ++currentMaxId;
     }
 
     private void checkUser(User user) {
         String email = user.getEmail();
         String login = user.getLogin();
-
-        if (email == null || email.isEmpty()) {
-            newValidationException("Электронная почта не может быть пустой");
-        } else if (!email.contains("@")) {
-            newValidationException("электронная почта должна содержать символ @");
-        }
-
-        if (login == null || login.isEmpty() || login.contains(" ")) {
-            newValidationException("логин не может быть пустым и содержать пробелы");
-        }
-
-        if (user.getBirthday() != null && user.getBirthday().isAfter(LocalDate.now())) {
-            newValidationException("дата рождения не может быть в будущем");
-        }
 
         String name = user.getName();
         if (name == null || name.isBlank() || name.isEmpty()) {

@@ -11,7 +11,7 @@ import java.time.LocalDate;
 public class User {
     private Long id;                // целочисленный идентификатор
     @NotBlank(message = "Электронная почта не может быть пустой")
-    @Email
+    @Email(message = "Неверный формат адреса электронной почты")
     private String email;           // электронная почта
     @NotBlank(message = "Логин не может быть пустым и содержать пробелы")
     private String login;           // логин пользователя

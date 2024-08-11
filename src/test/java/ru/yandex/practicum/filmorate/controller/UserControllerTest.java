@@ -67,7 +67,7 @@ public class UserControllerTest {
 
         Set<ConstraintViolation<User>> violations = validator.validate(user);
         assertFalse(violations.isEmpty());
-        assertTrue(violations.stream().anyMatch(v -> v.getMessage().contains("формат адреса электронной почты")));
+        assertTrue(violations.stream().anyMatch(v -> v.getMessage().contains("Неверный формат адреса электронной почты")));
 
     }
 

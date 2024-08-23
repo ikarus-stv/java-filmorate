@@ -26,18 +26,14 @@ public class FilmService {
         }
 
         User user = userStorage.get(userId);
-        if (user == null) {
-            throw new NotFoundException("Пользователь с id = " + userId + " не найден");
-        }
 
         film.getLikes().add(userId);
     }
 
     public void filmRemoveLike(Long filmId, Long userId) {
         Film film = filmStorage.get(filmId);
-        if (film == null) {
-            throw new NotFoundException("Фильм с id = " + filmId + " не найден");
-        }
+
+        User user = userStorage.get(userId);
 
         film.getLikes().remove(userId);
     }

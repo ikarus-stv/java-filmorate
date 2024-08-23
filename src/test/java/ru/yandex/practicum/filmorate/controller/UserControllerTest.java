@@ -1,8 +1,8 @@
 package ru.yandex.practicum.filmorate.controller;
 
-import jakarta.validation.Validation;
+// import jakarta.validation.Validation;
 import jakarta.validation.Validator;
-import org.junit.jupiter.api.BeforeEach;
+// import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import ru.yandex.practicum.filmorate.model.User;
 import jakarta.validation.ConstraintViolation;
@@ -17,11 +17,13 @@ public class UserControllerTest {
     UserController cntrl;
     private Validator validator;
 
+/*
     @BeforeEach
     void prepare() {
         cntrl = new UserController();
         validator = Validation.buildDefaultValidatorFactory().getValidator();
     }
+*/
 
     @Test
     void trueUserAppends() {

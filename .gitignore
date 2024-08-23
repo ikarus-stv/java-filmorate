@@ -15,6 +15,7 @@ target/
 !**/src/test/**/target/
 checkstyle.xml
 suppressions.xml
+src/main/resources/sprint.json
 
 ### STS ###
 .apt_generated

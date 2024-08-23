@@ -1,6 +1,5 @@
 package ru.yandex.practicum.filmorate.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.exception.NotFoundException;
 import ru.yandex.practicum.filmorate.model.Film;
@@ -19,8 +18,6 @@ public class FilmService {
         this.filmStorage = filmStorage;
         this.userStorage = userStorage;
     }
-
-    @Autowired
 
     public void filmAddLike(Long filmId, Long userId) {
         Film film = filmStorage.get(filmId);
@@ -45,10 +42,10 @@ public class FilmService {
         film.getLikes().remove(userId);
     }
 
-    public List<Film> getMostPopular() {
+    public List<Film> getMostPopular(Long count) {
         return filmStorage.findAll().stream()
                 .sorted((f1, f2) -> (f2.getLikes().size() - f1.getLikes().size()))
-                .limit(10)
+                .limit(count)
                 .toList();
     }
 

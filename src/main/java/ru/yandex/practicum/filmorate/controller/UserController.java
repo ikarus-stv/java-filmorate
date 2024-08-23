@@ -40,4 +40,23 @@ public class UserController {
         return userStorage.update(newUser);
     }
 
+    @PutMapping("/{id}/friends/{friendId}")
+    void makeFriendship(@PathVariable Long id, @PathVariable Long friendId) {
+        userService.makeFriendship(id, friendId);
+    }
+
+    @DeleteMapping("/{id}/friends/{friendId}")
+    void destroyFriendship(@PathVariable Long id, @PathVariable Long friendId) {
+        userService.destroyFriendship(id, friendId);
+    }
+
+    @GetMapping("/{id}/friends")
+    @ResponseBody Collection<User> getUserFriends(@PathVariable Long id) {
+        return userService.gerUserFriends(id);
+    }
+
+    @GetMapping("/{id}/friends/common/{otherId}")
+    @ResponseBody Collection<User> getCommonFriends(@PathVariable Long id, @PathVariable Long otherId) {
+        return userService.getCommonFriends(id, otherId);
+    }
 }

@@ -23,7 +23,7 @@ public class FilmControllerTest {
 
     @BeforeEach
     void prepare() {
-        cntrl = new FilmController();
+//        cntrl = new FilmController();
         validator = Validation.buildDefaultValidatorFactory().getValidator();
     }
 

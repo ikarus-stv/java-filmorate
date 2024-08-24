@@ -1,6 +1,6 @@
 package ru.yandex.practicum.filmorate.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.storage.UserStorage;
@@ -8,14 +8,10 @@ import ru.yandex.practicum.filmorate.storage.UserStorage;
 import java.util.*;
 
 @Service
+@RequiredArgsConstructor
 public class UserService {
 
-    final UserStorage storage;
-
-    @Autowired
-    public UserService(UserStorage storage) {
-        this.storage = storage;
-    }
+    private final UserStorage storage;
 
     public void makeFriendship(Long id1, Long id2) {
         if (id1.equals(id2)) {

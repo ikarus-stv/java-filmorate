@@ -8,6 +8,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
+import ru.yandex.practicum.filmorate.storage.FilmStorage;
+import ru.yandex.practicum.filmorate.storage.InMemoryFilmStorage;
 
 import java.time.LocalDate;
 import java.util.Collection;
@@ -17,13 +19,13 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class FilmControllerTest {
 
-    private FilmController cntrl;
+    private FilmStorage cntrl;
     private Validator validator;
 
 
     @BeforeEach
     void prepare() {
-        cntrl = new FilmController();
+        cntrl = new InMemoryFilmStorage();
         validator = Validation.buildDefaultValidatorFactory().getValidator();
     }
 

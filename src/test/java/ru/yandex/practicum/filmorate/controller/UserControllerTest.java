@@ -2,10 +2,13 @@ package ru.yandex.practicum.filmorate.controller;
 
 import jakarta.validation.Validation;
 import jakarta.validation.Validator;
+// import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import ru.yandex.practicum.filmorate.model.User;
 import jakarta.validation.ConstraintViolation;
+import ru.yandex.practicum.filmorate.storage.InMemoryUserStorage;
+import ru.yandex.practicum.filmorate.storage.UserStorage;
 
 import java.time.LocalDate;
 import java.util.Collection;
@@ -14,12 +17,13 @@ import java.util.Set;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class UserControllerTest {
-    UserController cntrl;
+    UserStorage cntrl;
     private Validator validator;
+
 
     @BeforeEach
     void prepare() {
-        cntrl = new UserController();
+        cntrl = new InMemoryUserStorage();
         validator = Validation.buildDefaultValidatorFactory().getValidator();
     }
 

@@ -21,7 +21,7 @@ public class FilmController {
 
     @GetMapping
     public Collection<Film> findAll() {
-        return Collections.unmodifiableCollection(filmStorage.findAll());
+        return filmStorage.findAll();
     }
 
     @PostMapping

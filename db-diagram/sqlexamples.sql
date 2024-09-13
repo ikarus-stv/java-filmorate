@@ -65,7 +65,6 @@ SELECT id,
        description,
        release_date,
        duration,
-       genre_id,
        rating,
        count(fl.film_id) cnt
 FROM film f
@@ -75,7 +74,6 @@ GROUP BY id,
          description,
          release_date,
          duration,
-         genre_id,
          rating
 ORDER BY cnt DESC,
          f.name_film

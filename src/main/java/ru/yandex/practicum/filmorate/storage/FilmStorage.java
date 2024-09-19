@@ -1,5 +1,7 @@
 package ru.yandex.practicum.filmorate.storage;
 
+import ru.yandex.practicum.filmorate.dto.Genre;
+import ru.yandex.practicum.filmorate.dto.Mpa;
 import ru.yandex.practicum.filmorate.model.Film;
 
 import java.util.Collection;
@@ -13,4 +15,12 @@ public interface FilmStorage {
     Film update(Film newFilm);
 
     Film get(Long id);
+
+    Collection<Genre> findAllGenres();
+
+    Genre findGenreById(Long id);
+
+    Collection<Mpa> findAllMpa();
+
+    Mpa findMpaById(Long id);
 }

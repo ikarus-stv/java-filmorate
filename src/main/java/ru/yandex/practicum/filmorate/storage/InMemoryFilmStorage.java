@@ -2,6 +2,8 @@ package ru.yandex.practicum.filmorate.storage;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
+import ru.yandex.practicum.filmorate.dto.Genre;
+import ru.yandex.practicum.filmorate.dto.Mpa;
 import ru.yandex.practicum.filmorate.exception.NotFoundException;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
@@ -64,6 +66,26 @@ public class InMemoryFilmStorage implements FilmStorage {
         }
 
         return film;
+    }
+
+    @Override
+    public Collection<Genre> findAllGenres() {
+        return null;
+    }
+
+    @Override
+    public Genre findGenreById(Long id) {
+        return null;
+    }
+
+    @Override
+    public Collection<Mpa> findAllMpa() {
+        return null;
+    }
+
+    @Override
+    public Mpa findMpaById(Long id) {
+        return null;
     }
 
     private void newNotFoundException(String errMsg) {

@@ -1,6 +1,7 @@
 package ru.yandex.practicum.filmorate.service;
 
-import lombok.RequiredArgsConstructor;
+//import lombok.RequiredArgsConstructor;
+//import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.storage.UserStorage;
@@ -8,10 +9,13 @@ import ru.yandex.practicum.filmorate.storage.UserStorage;
 import java.util.*;
 
 @Service
-@RequiredArgsConstructor
 public class UserService {
 
     private final UserStorage storage;
+
+    public UserService(/*@Qualifier("DBUserStorage") */UserStorage storage) {
+        this.storage = storage;
+    }
 
     public void makeFriendship(Long id1, Long id2) {
         if (id1.equals(id2)) {
@@ -19,15 +23,20 @@ public class UserService {
         }
         User user1 = storage.get(id1);
         User user2 = storage.get(id2);
-        user1.getFriends().add(id2);
-        user2.getFriends().add(id1);
+        if (!user1.getFriends().contains(id2)) {
+            storage.addFriendship(id1, id2);
+        }
     }
 
+    public void acceptFriendship(Long id1, Long id2) {
+        storage.acceptFriendship(id1, id2);
+    }
+
+
     public void destroyFriendship(Long id1, Long id2) {
-        User user1 = storage.get(id1);
-        User user2 = storage.get(id2);
-        user1.getFriends().remove(id2);
-        user2.getFriends().remove(id1);
+        storage.get(id1);
+        storage.get(id2);
+        storage.destroyFriendship(id1, id2);
     }
 
     public Collection<User> getCommonFriends(Long id1, Long id2) {

@@ -11,12 +11,14 @@ import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmorate.dto.Genre;
 import ru.yandex.practicum.filmorate.dto.Mpa;
 import ru.yandex.practicum.filmorate.exception.NotFoundException;
+import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
 
 import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
@@ -57,6 +59,7 @@ public class DBFilmStorage implements FilmStorage {
                 """;
         String insertGenreQuery = "INSERT INTO FILM_GENRE(FILM_ID, GENRE_ID) VALUES (?,?)";
 
+        checkFilm(film);
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(connection -> {
             PreparedStatement stmt = connection.prepareStatement(insertFilmQuery, new String[]{"id"});
@@ -81,7 +84,23 @@ public class DBFilmStorage implements FilmStorage {
 
     @Override
     public Film update(Film newFilm) {
-        return null;
+        String updateFilmQuery = "UPDATE FILM SET NAME_FILM = ?,"
+                            + "DESCRIPTION = ?, RELEASE_DATE = ?, DURATION = ?, RATING_ID = ?"
+                            + "WHERE ID = ?";
+        get(newFilm.getId());
+        checkFilm(newFilm);
+
+        /*Тут должен быть update*/
+        jdbcTemplate.update(updateFilmQuery,
+                newFilm.getName(),
+                newFilm.getDescription(),
+                Date.valueOf(newFilm.getReleaseDate()),
+                newFilm.getDuration(),
+                newFilm.getMpa().getId(),
+                newFilm.getId()
+                );
+
+        return newFilm;
     }
 
     @Override
@@ -122,6 +141,11 @@ public class DBFilmStorage implements FilmStorage {
         } catch (EmptyResultDataAccessException e) {
             throw new NotFoundException("Рейтинг с id=" + id + " не найден");
         }
+    }
+
+    @Override
+    public void filmAddLike(Long filmId, Long userId) {
+        jdbcTemplate.update("INSERT INTO FILM_LIKE (FILM_ID, USER_ID) VALUES (?, ?)", filmId, userId);
     }
 
     private Mpa mapRowToMpa(ResultSet resultSet, int i) throws SQLException  {
@@ -165,4 +189,12 @@ public class DBFilmStorage implements FilmStorage {
         }
         return film;
     }
+
+    private void checkFilm(Film film) {
+        LocalDate releaseDate = film.getReleaseDate();
+        if (releaseDate != null && releaseDate.isBefore(LocalDate.of(1895,12,28))) {
+            throw new ValidationException("дата релиза не может быть раньше 28 декабря 1895 года");
+        }
+    }
+
 }

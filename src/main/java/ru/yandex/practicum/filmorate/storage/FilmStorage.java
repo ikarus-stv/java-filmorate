@@ -23,4 +23,7 @@ public interface FilmStorage {
     Collection<Mpa> findAllMpa();
 
     Mpa findMpaById(Long id);
+
+    void filmAddLike(Long filmId, Long userId);
+
 }

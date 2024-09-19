@@ -88,6 +88,11 @@ public class InMemoryFilmStorage implements FilmStorage {
         return null;
     }
 
+    @Override
+    public void filmAddLike(Long filmId, Long userId) {
+
+    }
+
     private void newNotFoundException(String errMsg) {
         log.error(errMsg);
         throw new NotFoundException(errMsg);

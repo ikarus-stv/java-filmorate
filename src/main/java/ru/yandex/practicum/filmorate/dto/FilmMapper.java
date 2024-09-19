@@ -33,18 +33,28 @@ public final class FilmMapper {
     }
 
 
-/*
-    public static User updateUserFields(User user, UpdateUserRequest request) {
-        if (request.hasEmail()) {
-            user.setEmail(request.getEmail());
+
+    public static Film updateFilmFields(Film film, UpdateFilmDTO request) {
+        if (request.hasName()) {
+            film.setName(request.getName());
         }
-        if (request.hasPassword()) {
-            user.setPassword(request.getPassword());
+        if (request.hasDescription()) {
+            film.setDescription(request.getDescription());
         }
-        if (request.hasUsername()) {
-            user.setUsername(request.getUsername());
+
+        if (request.hasReleaseDate()) {
+            film.setReleaseDate(request.getReleaseDate());
         }
-        return user;
+
+        if (request.hasDuration()) {
+            film.setDuration(request.getDuration());
+        }
+
+        if (request.hasMpa()) {
+            film.setMpa(new Mpa(request.getMpa().getId(), request.getMpa().getName()));
+        }
+
+        return film;
     }
-*/
+
 }

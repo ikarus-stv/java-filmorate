@@ -7,7 +7,6 @@ import ru.yandex.practicum.filmorate.dto.FilmDTO;
 import ru.yandex.practicum.filmorate.dto.FilmMapper;
 import ru.yandex.practicum.filmorate.dto.UpdateFilmDTO;
 import ru.yandex.practicum.filmorate.model.Film;
-import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.storage.FilmStorage;
 import ru.yandex.practicum.filmorate.storage.UserStorage;
 
@@ -31,11 +30,7 @@ public class FilmService {
     }
 
     public void filmRemoveLike(Long filmId, Long userId) {
-        Film film = filmStorage.get(filmId);
-
-        User user = userStorage.get(userId);
-
-        film.getLikes().remove(userId);
+        filmStorage.filmRemoveLike(filmId, userId);
     }
 
     public List<Film> getMostPopular(Long count) {

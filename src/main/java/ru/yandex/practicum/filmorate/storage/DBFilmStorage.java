@@ -148,6 +148,11 @@ public class DBFilmStorage implements FilmStorage {
         jdbcTemplate.update("INSERT INTO FILM_LIKE (FILM_ID, USER_ID) VALUES (?, ?)", filmId, userId);
     }
 
+    @Override
+    public void filmRemoveLike(Long filmId, Long userId) {
+        jdbcTemplate.update("DELETE FROM FILM_LIKE WHERE FILM_ID=? AND USER_ID=?", filmId, userId);
+    }
+
     private Mpa mapRowToMpa(ResultSet resultSet, int i) throws SQLException  {
         return Mpa.builder()
                 .id(resultSet.getLong("ID"))

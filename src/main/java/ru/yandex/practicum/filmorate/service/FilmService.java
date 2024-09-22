@@ -1,38 +1,36 @@
 package ru.yandex.practicum.filmorate.service;
 
-import lombok.RequiredArgsConstructor;
+//import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
-import ru.yandex.practicum.filmorate.exception.NotFoundException;
+import ru.yandex.practicum.filmorate.dto.FilmDTO;
+import ru.yandex.practicum.filmorate.dto.FilmMapper;
+import ru.yandex.practicum.filmorate.dto.UpdateFilmDTO;
 import ru.yandex.practicum.filmorate.model.Film;
-import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.storage.FilmStorage;
 import ru.yandex.practicum.filmorate.storage.UserStorage;
 
 import java.util.List;
 
 @Service
-@RequiredArgsConstructor
 public class FilmService {
     private final FilmStorage filmStorage;
     private final UserStorage userStorage;
 
+    public FilmService(FilmStorage filmStorage, @Qualifier("DBUserStorage") UserStorage userStorage) {
+        this.filmStorage = filmStorage;
+        this.userStorage = userStorage;
+    }
+
     public void filmAddLike(Long filmId, Long userId) {
-        Film film = filmStorage.get(filmId);
-        if (film == null) {
-            throw new NotFoundException("Фильм с id = " + filmId + " не найден");
-        }
+        filmStorage.get(filmId);
+        userStorage.get(userId);
 
-        User user = userStorage.get(userId);
-
-        film.getLikes().add(userId);
+        filmStorage.filmAddLike(filmId, userId);
     }
 
     public void filmRemoveLike(Long filmId, Long userId) {
-        Film film = filmStorage.get(filmId);
-
-        User user = userStorage.get(userId);
-
-        film.getLikes().remove(userId);
+        filmStorage.filmRemoveLike(filmId, userId);
     }
 
     public List<Film> getMostPopular(Long count) {
@@ -42,4 +40,8 @@ public class FilmService {
                 .toList();
     }
 
+    public FilmDTO update(UpdateFilmDTO newFilm) {
+        Film updatedFilm = filmStorage.get(newFilm.getId());
+        return FilmMapper.mapToFilmDTO(filmStorage.update(FilmMapper.updateFilmFields(updatedFilm, newFilm)));
+    }
 }

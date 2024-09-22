@@ -1,0 +1,55 @@
+// Use DBML to define your database structure
+// Docs: https://dbml.dbdiagram.io/docs
+
+Project project_name {
+  database_type: 'PostgreSQL'
+  Note: 'Спринт 13/20: 12 -> Тема 6/11: Промежуточное задание месяца SQL -> Урок 1/1'
+}
+
+Table friendship {
+  user1_id integer [ref: > users.id]
+  user2_id integer [ref: > users.id]
+  confirmed bool 
+  indexes {
+    (user1_id, user2_id) [pk] // composite primary key
+  }
+
+}
+
+Table users {
+  id integer [primary key]
+  email varchar
+  login varchar
+  user_name varchar
+  birthday date
+  created_at date
+}
+
+Table genre {
+  id integer [primary key]
+  name_genre varchar
+}
+
+Table film {
+  id integer [primary key]
+  name_film varchar
+  description varchar
+  release_date date
+  duration integer
+  genre_id integer [ref: > genre.id]
+  rating varchar [ ref: > rating.name_rating]
+}
+
+Table film_like {
+  film_id integer [ref: > film.id]
+  user_id integer [Ref:  > users.id]
+  indexes {
+    (film_id, user_id) [pk] // composite primary key
+  }
+
+}
+
+Table rating {
+  name_rating varchar [ primary key]
+  description varchar
+}

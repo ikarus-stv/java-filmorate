@@ -93,6 +93,7 @@
 					<logViolationsToConsole>true</logViolationsToConsole>
 					<includeTestSourceDirectory>true</includeTestSourceDirectory>
 				</configuration>
+<!--
 				<executions>
 					<execution>
 						<goals>
@@ -101,8 +102,17 @@
 						<phase>compile</phase>
 					</execution>
 				</executions>
+-->
 			</plugin>
 		</plugins>
 	</build>
-
+	<reporting>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jxr-plugin</artifactId>
+				<version>3.3.0</version>
+			</plugin>
+		</plugins>
+	</reporting>
 </project>

@@ -8,9 +8,8 @@ import ru.yandex.practicum.filmorate.model.User;
 
 import java.util.*;
 
-@Component
+@Component("InMemoryUserStorage")
 @Slf4j
-
 public class InMemoryUserStorage implements UserStorage {
     private final Map<Long, User> users = new HashMap<>();
     private long currentMaxId = 0;
@@ -70,6 +69,21 @@ public class InMemoryUserStorage implements UserStorage {
             throw new NotFoundException("Пользователь с id=" + id + " не найден");
         }
         return result;
+    }
+
+    @Override
+    public void addFriendship(Long id1, Long id2) {
+        get(id1).getFriends().add(id2);
+    }
+
+    @Override
+    public void acceptFriendship(Long id1, Long id2) {
+        get(id1).getFriends().add(id2);
+    }
+
+    @Override
+    public void destroyFriendship(Long id1, Long id2) {
+        get(id1).getFriends().remove(id2);
     }
 
     private void newValidationException(String errMsg) {

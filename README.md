@@ -1,7 +1,7 @@
 # java-filmorate
 Template repository for Filmorate project.
 
-![cхема базы данных-3](./db-diagram/erwin.png)
+![database schema](./db-diagram/erwin.png)
 
-[Примеры запросов](./db-diagram/sqlexamples.sql)
+[query examples](./db-diagram/sqlexamples.sql)
 

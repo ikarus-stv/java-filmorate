@@ -2,7 +2,6 @@ package ru.yandex.practicum.filmorate.storage;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-//import org.springframework.context.annotation.Primary;
 import org.springframework.context.annotation.Primary;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -20,10 +19,10 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.stream.Collectors;
 
-@Component("DBUserStorage")
 @Slf4j
-@Primary
 @RequiredArgsConstructor
+@Primary
+@Component("DBUserStorage")
 public class DBUserStorage implements UserStorage {
     private static final String FIND_ALL_QUERY = """
                 SELECT ID, EMAIL, LOGIN, USER_NAME, BIRTHDAY, LISTAGG(f.USER2_ID) AS FRIENDS
@@ -108,12 +107,6 @@ public class DBUserStorage implements UserStorage {
     public void destroyFriendship(Long id1, Long id2) {
         String sqlQuery = "DELETE FROM FRIENDSHIP WHERE USER1_ID = ? AND USER2_ID = ?";
         int count = jdbcTemplate.update(sqlQuery, id1, id2);
-        /*
-        if (count == 0) {
-            throw new NotFoundException("Дружба " + id1 + " c " + id2 + " не найдена");
-        }
-
-         */
     }
 
     private User mapRowToUser(ResultSet resultSet, int rowNum)  throws SQLException {

@@ -29,6 +29,7 @@ public final class FilmMapper {
         dto.setDuration(film.getDuration());
         dto.setMpa(new Mpa(film.getMpa().getId(), film.getMpa().getName()));
         dto.setGenres(film.getGenres().stream().map(genre -> new Genre(genre.getId(), genre.getName())).toList());
+        dto.setLikes(film.getLikes());
         return dto;
     }
 

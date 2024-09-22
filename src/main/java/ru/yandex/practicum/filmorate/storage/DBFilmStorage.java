@@ -31,18 +31,53 @@ import java.util.stream.Collectors;
 
 public class DBFilmStorage implements FilmStorage {
     private static final String FIND_ALL_QUERY = """
-            SELECT F.ID, F.NAME_FILM, F.DESCRIPTION, F.RELEASE_DATE, F.DURATION, F.RATING_ID, R.NAME_RATING,
-            (SELECT LISTAGG(CONCAT(GENRE_ID,'/',NAME_GENRE)) FROM FILM_GENRE fg JOIN GENRE g ON fg.GENRE_ID = g.ID WHERE fg.film_Id = f.ID) GENRES,
-            (SELECT LISTAGG(USER_ID) FROM FILM_LIKE fl WHERE fl.film_Id = f.ID) LIKES
-            FROM FILM F LEFT JOIN RATING R ON RATING_ID=R.ID
-            """;
+        SELECT F.ID,
+               F.NAME_FILM,
+               F.DESCRIPTION,
+               F.RELEASE_DATE,
+               F.DURATION,
+               F.RATING_ID,
+               R.NAME_RATING,
+               LISTAGG(DISTINCT CONCAT(GENRE_ID, '/', G.NAME_GENRE)) FILTER (WHERE GENRE_ID IS NOT NULL) AS GENRES,
+               LISTAGG(DISTINCT FL.USER_ID) AS LIKES
+        FROM FILM F
+        LEFT JOIN RATING R ON F.RATING_ID = R.ID
+        LEFT JOIN FILM_GENRE FG ON F.ID = FG.FILM_ID
+        LEFT JOIN GENRE G ON FG.GENRE_ID = G.ID
+        LEFT JOIN FILM_LIKE FL ON F.ID = FL.FILM_ID
+        GROUP BY F.ID,
+                 F.NAME_FILM,
+                 F.DESCRIPTION,
+                 F.RELEASE_DATE,
+                 F.DURATION,
+                 F.RATING_ID,
+                 R.NAME_RATING
+                    """;
+
     private static final String FIND_BY_ID_QUERY = """
-            SELECT F.ID, F.NAME_FILM, F.DESCRIPTION, F.RELEASE_DATE, F.DURATION, F.RATING_ID, R.NAME_RATING,
-            (SELECT LISTAGG(CONCAT(GENRE_ID,'/',NAME_GENRE)) FROM FILM_GENRE fg JOIN GENRE g ON fg.GENRE_ID = g.ID WHERE fg.film_Id = f.ID) GENRES,
-            (SELECT LISTAGG(USER_ID) FROM FILM_LIKE fl WHERE fl.film_Id = f.ID) LIKES
-            FROM FILM F LEFT JOIN RATING R ON RATING_ID=R.ID
-            WHERE F.ID = ?
-            """;
+            SELECT F.ID,
+                   F.NAME_FILM,
+                   F.DESCRIPTION,
+                   F.RELEASE_DATE,
+                   F.DURATION,
+                   F.RATING_ID,
+                   R.NAME_RATING,
+                   LISTAGG(DISTINCT CONCAT(GENRE_ID, '/', G.NAME_GENRE)) FILTER (WHERE GENRE_ID IS NOT NULL) AS GENRES,
+                   LISTAGG(DISTINCT FL.USER_ID) AS LIKES
+            FROM FILM F
+            LEFT JOIN RATING R ON F.RATING_ID = R.ID
+            LEFT JOIN FILM_GENRE FG ON F.ID = FG.FILM_ID
+            LEFT JOIN GENRE G ON FG.GENRE_ID = G.ID
+            LEFT JOIN FILM_LIKE FL ON F.ID = FL.FILM_ID
+            GROUP BY F.ID,
+                     F.NAME_FILM,
+                     F.DESCRIPTION,
+                     F.RELEASE_DATE,
+                     F.DURATION,
+                     F.RATING_ID,
+                     R.NAME_RATING
+            HAVING F.ID = ?;
+                """;
 
     private final JdbcTemplate jdbcTemplate;
 
@@ -84,13 +119,15 @@ public class DBFilmStorage implements FilmStorage {
 
     @Override
     public Film update(Film newFilm) {
-        String updateFilmQuery = "UPDATE FILM SET NAME_FILM = ?,"
-                            + "DESCRIPTION = ?, RELEASE_DATE = ?, DURATION = ?, RATING_ID = ?"
-                            + "WHERE ID = ?";
+        String updateFilmQuery = """
+                UPDATE FILM SET NAME_FILM = ?,
+                DESCRIPTION = ?, RELEASE_DATE = ?, DURATION = ?, RATING_ID = ?
+                WHERE ID = ?
+                """;
+
         get(newFilm.getId());
         checkFilm(newFilm);
 
-        /*Тут должен быть update*/
         jdbcTemplate.update(updateFilmQuery,
                 newFilm.getName(),
                 newFilm.getDescription(),
